@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>회원가입</title>
+    <script>
+        function checkUsername() {
+            const username = document.getElementById("username").value;
+            console.log("[JS] 입력된 username:", username); // 디버깅용 로그
+
+            fetch("/check-username?username=" + username + "&ts=" + new Date().getTime())
+                .then(res => res.text())
+                .then(result => {
+                    const resultDiv = document.getElementById("checkResult");
+                    if (result === "duplicate") {
+                        resultDiv.innerText = "❌ 이미 사용 중인 아이디입니다.";
+                        resultDiv.style.color = "red";
+                    } else {
+                        resultDiv.innerText = "✅ 사용 가능한 아이디입니다.";
+                        resultDiv.style.color = "green";
+                    }
+                })
+                .catch(err => console.error("중복확인 fetch 실패:", err));
+        }
+    </script>
+</head>
+<body>
+<h2>회원가입</h2>
+
+<!-- 에러 메시지 출력 -->
+<div th:if="${error}">
+    <p style="color:red;" th:text="${error}"></p>
+</div>
+
+<form th:action="@{/register}" method="post" th:object="${memberRequest}">
+    <label>아이디:
+        <input type="text" th:field="*{username}" />
+        <button type="button" onclick="checkUsername()">중복확인</button>
+        <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style="color:red;"></div>
+    </label><br/>
+
+    <label>비밀번호:
+        <input type="password" th:field="*{password}" />
+        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red;"></div>
+    </label><br/>
+
+    <label>비밀번호 확인:
+        <input type="password" th:field="*{confirmPassword}" />
+        <div th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" style="color:red;"></div>
+    </label><br/>
+
+    <label>주민등록번호:
+        <input type="text" th:field="*{ssn}" />
+        <div th:if="${#fields.hasErrors('ssn')}" th:errors="*{ssn}" style="color:red;"></div>
+    </label><br/>
+
+    <label>전화번호:
+        <input type="text" th:field="*{phoneNumber}" />
+        <div th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" style="color:red;"></div>
+    </label><br/>
+
+    <div th:if="${error}" style="color:red;">[[${error}]]</div>
+
+    <button type="submit">가입하기</button>
+</form>
+
+</body>
+</html>
