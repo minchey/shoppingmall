@@ -21,4 +21,5 @@ public class ProductController {
         model.addAttribute("products", productList);
         return "products"; // templates/products.html 로 이동
     }
+ 
 }
