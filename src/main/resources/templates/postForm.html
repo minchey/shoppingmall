@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>글쓰기</title>
+</head>
+<body>
+<a href="/main">
+  <button>🏠 홈으로</button>
+</a>
+<h2>📝 글쓰기</h2>
+<form action="/posts" method="post">
+  <label>제목: <input type="text" name="title" required /></label><br><br>
+  <label>내용:</label><br>
+  <textarea name="content" rows="8" cols="50" required></textarea><br><br>
+  <button type="submit">등록</button>
+</form>
+<a href="/posts"><button type="button">목록으로</button></a>
+</body>
+</html>

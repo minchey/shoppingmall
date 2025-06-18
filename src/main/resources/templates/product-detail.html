@@ -5,6 +5,9 @@
   <title th:text="${product.name} + ' - 상세페이지'">상품 상세페이지</title>
 </head>
 <body>
+<a href="/main">
+  <button>🏠 홈으로</button>
+</a>
 <h2 th:text="${product.name}">상품명</h2>
 <p><strong>가격:</strong> <span th:text="${product.price} + '원'">가격</span></p>
 <p><strong>설명:</strong> <span th:text="${product.description}">설명</span></p>
