@@ -2,16 +2,20 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title th:text="${product.name} + ' - 상세페이지'">상품 상세페이지</title>
+  <title>상품 상세</title>
 </head>
 <body>
-<a href="/main">
-  <button>🏠 홈으로</button>
-</a>
-<h2 th:text="${product.name}">상품명</h2>
-<p><strong>가격:</strong> <span th:text="${product.price} + '원'">가격</span></p>
-<p><strong>설명:</strong> <span th:text="${product.description}">설명</span></p>
+<h1>상품 상세 정보</h1>
 
-<a href="/products">← 목록으로 돌아가기</a>
+<img th:src="@{'/uploads/' + ${product.imageFilename}}" width="200">
+<p><strong>ID:</strong> <span th:text="${product.id}">1</span></p>
+
+<p><strong>상품명:</strong> <span th:text="${product.name}">청바지</span></p>
+<p><strong>가격:</strong> <span th:text="${product.price}">10000</span> 원</p>
+<p><strong>설명:</strong> <span th:text="${product.description}">설명 텍스트</span></p>
+
+<br>
+<a href="/products"><button>상품 목록</button></a>
+<a href="/main"><button>메인으로</button></a>
 </body>
 </html>

@@ -1,49 +1,76 @@
 package com.example.loginproject.controller;
 
 import com.example.loginproject.domain.Product;
+import com.example.loginproject.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 
 import java.util.List;
 
 @Controller
 public class ProductController {
 
-    // 임시 상품 리스트 (DB 없을 때 테스트용)
-    private final List<Product> productList = List.of(
-            new Product(1L, "청바지", 45000, "편안한 청바지"),
-            new Product(2L, "운동화", 69000, "가벼운 러닝화"),
-            new Product(3L, "후드티", 35000, "겨울용 기모 후드티")
-    );
+    private final ProductService productService;
 
-    // 상품 목록 페이지
+    @Autowired
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
+
+    // 상품 등록 폼
+    @GetMapping("/products/new")
+    public String showCreateForm(Model model) {
+        model.addAttribute("product", new Product());
+        return "product-form";
+    }
+
+    // 상품 등록 처리
+    @PostMapping("/products/new")
+    public String createProduct(@ModelAttribute Product product,
+                                @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
+
+        if (!imageFile.isEmpty()) {
+            String uploadDir = System.getProperty("user.dir") + "/uploads/";
+            String originalFilename = imageFile.getOriginalFilename();
+            String savedFileName = UUID.randomUUID() + "_" + originalFilename;
+
+            File saveFile = new File(uploadDir, savedFileName);
+            saveFile.getParentFile().mkdirs(); // 디렉토리 없으면 생성
+            imageFile.transferTo(saveFile);
+
+            product.setImageFilename(savedFileName);  // DB에 파일명 저장
+        }
+
+        productService.saveProduct(product);
+        return "redirect:/products";
+    }
+
+
+    // 상품 목록
     @GetMapping("/products")
-    public String showProductList(Model model) {
+    public String listProducts(Model model) {
+        List<Product> productList = productService.getAllProducts();
         model.addAttribute("products", productList);
         return "products";
     }
 
+    // 상품 상세보기
     @GetMapping("/products/{id}")
-    public String showProductDetail(@PathVariable Long id, Model model) {
-        List<Product> productList = List.of(
-                new Product(1L, "청바지", 45000, "편안한 청바지"),
-                new Product(2L, "운동화", 69000, "가벼운 러닝화"),
-                new Product(3L, "후드티", 35000, "겨울용 기모 후드티")
-        );
+    public String viewProduct(@PathVariable Long id, Model model) {
+        Product product = productService.getProductById(id);
 
-        // id로 상품 찾기
-        Product foundProduct = productList.stream()
-                .filter(p -> p.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-
-        if (foundProduct == null) {
-            return "redirect:/products"; // 없는 상품이면 목록으로 이동
+        if (product == null) {
+            return "redirect:/products";
         }
 
-        model.addAttribute("product", foundProduct);
-        return "product-detail"; // templates/product-detail.html로 이동
+        model.addAttribute("product", product);
+        return "product-detail";
     }
-
 }

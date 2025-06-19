@@ -1,22 +1,31 @@
 package com.example.loginproject.domain;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
+@Entity
+@Getter
+@NoArgsConstructor  // JPA 기본 생성자 필수!
+@AllArgsConstructor
+@Setter
 public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private int price;
     private String description;
+    private String imageFilename;  // 파일명 저장
 
-    // 생성자
-    public Product(Long id, String name, int price, String description) {
-        this.id = id;
+    // 직접 등록할 때 사용할 생성자
+    public Product(String name, int price, String description) {
         this.name = name;
         this.price = price;
         this.description = description;
     }
-
-    // Getter만 있어도 충분함 (Lombok 써도 OK)
-    public Long getId() { return id; }
-    public String getName() { return name; }
-    public int getPrice() { return price; }
-    public String getDescription() { return description; }
 }
