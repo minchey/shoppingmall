@@ -3,6 +3,8 @@ package com.example.loginproject.domain;
 
 import jakarta.persistence.*;              // @Entity, @Id, @Column 등 JPA 관련
 import lombok.*;                          // @Getter, @Setter, @NoArgsConstructor, @AllArgsConstructor
+import java.time.LocalDateTime;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Getter
@@ -39,5 +41,7 @@ public class Post {
     public void setIsImage(boolean isImage) {
         this.isImage = isImage;
     }
+    @CreationTimestamp
+    private LocalDateTime createdAt;  // ✨ 작성일 자동 저장
 
 }

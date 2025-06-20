@@ -77,4 +77,33 @@ public class PostController {
         model.addAttribute("post", post);
         return "postDetail"; // → templates/postDetail.html
     }
+    //게시글 수정
+    @GetMapping("/{id}/edit")
+    public String editPostForm(@PathVariable Long id, Model model) {
+        Post post = postRepository.findById(id).orElse(null);
+        model.addAttribute("post", post);
+        return "postEdit";  // templates/postEdit.html
+    }
+
+    @PostMapping("/{id}/edit")
+    public String updatePost(@PathVariable Long id,
+                             @RequestParam String title,
+                             @RequestParam String content) {
+        Post post = postRepository.findById(id).orElse(null);
+        if (post != null) {
+            post.setTitle(title);
+            post.setContent(content);
+            postRepository.save(post);  // 업데이트
+        }
+        return "redirect:/posts/" + id;
+    }
+
+    //게시글 삭제
+    @PostMapping("/{id}/delete")
+    public String deletePost(@PathVariable Long id) {
+        postRepository.deleteById(id);
+        return "redirect:/posts";
+    }
+
+
 }
