@@ -23,4 +23,21 @@ public class Post {
     private String content;
 
     private String author;
+
+    private String originalFilename;   // 사용자가 업로드한 파일 이름
+    private String storedFilename;     // 서버에 저장된 실제 파일 이름
+    private boolean isImage;           // 이미지인지 여부
+
+    public void setOriginalFilename(String originalFilename) {
+        this.originalFilename = originalFilename;
+    }
+
+    public void setStoredFilename(String storedFilename) {
+        this.storedFilename = storedFilename;
+    }
+
+    public void setIsImage(boolean isImage) {
+        this.isImage = isImage;
+    }
+
 }

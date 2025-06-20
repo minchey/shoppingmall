@@ -6,6 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
+
 
 @Controller
 @RequestMapping("/posts")
@@ -33,13 +38,37 @@ public class PostController {
 
     // 글 작성 처리
     @PostMapping
-    public String createPost(@RequestParam String title, @RequestParam String content) {
+    public String createPost(
+            @RequestParam String title,
+            @RequestParam String content,
+            @RequestParam("file") MultipartFile file
+    ) throws IOException {
+
         Post post = new Post();
         post.setTitle(title);
         post.setContent(content);
+
+        // 파일이 있을 경우 저장 처리
+        if (!file.isEmpty()) {
+            String uploadDir = System.getProperty("user.dir") + "/uploads/";
+            String originalFilename = file.getOriginalFilename();
+            String uuid = UUID.randomUUID().toString();
+            String storedFilename = uuid + "_" + originalFilename;
+
+            File saveFile = new File(uploadDir, storedFilename);
+            saveFile.getParentFile().mkdirs(); // 폴더 없으면 생성
+            file.transferTo(saveFile);
+
+            // Post에 파일 정보 저장
+            post.setOriginalFilename(originalFilename);
+            post.setStoredFilename(storedFilename);
+            post.setIsImage(originalFilename.matches("(?i).+\\.(png|jpg|jpeg|gif)$"));
+        }
+
         postRepository.save(post);
         return "redirect:/posts";
     }
+
 
     // 게시글 상세 보기
     @GetMapping("/{id}")

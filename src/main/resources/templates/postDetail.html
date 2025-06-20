@@ -9,6 +9,16 @@
 <p><strong>제목:</strong> <span th:text="${post.title}"></span></p>
 <p><strong>내용:</strong></p>
 <p th:text="${post.content}"></p>
+<!-- 첨부파일 구분 표시 -->
+<div th:if="${post.storedFilename}">
+  <div th:if="${post.isImage}">
+    <img th:src="@{'/uploads/' + ${post.storedFilename}}" width="300">
+  </div>
+  <div th:unless="${post.isImage}">
+    <a th:href="@{'/uploads/' + ${post.storedFilename}}" download th:text="${post.originalFilename}">파일 다운로드</a>
+  </div>
+
+</div>
 
 <a href="/posts">🔙 목록으로 돌아가기</a>
 <a href="/main">
