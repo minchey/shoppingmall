@@ -24,7 +24,8 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/login", "/check-username").permitAll()
+                        .requestMatchers("/register", "/login", "/check-username", "/main",
+                                "/css/**", "/js/**","/").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -40,13 +41,9 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login")
+                        .logoutSuccessUrl("/main")
                 )
                 .build();
     }
 
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
 }

@@ -2,12 +2,23 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head><title>Main Page</title></head>
 <body>
-<h1>로그인 성공! 메인 페이지입니다.</h1>
+<!-- ✅ 상단 로그인/로그아웃 영역 -->
+<div style="text-align: right; margin-bottom: 20px;">
+    <div th:if="${loginUser == null}">
+        <a href="/login"><button>🔐 로그인</button></a>
+        <a href="/register"><button>📝 회원가입</button></a>
+    </div>
+    <div th:if="${loginUser != null}">
+        <span th:text="'👋 ' + ${loginUser} + '님 환영합니다!'"></span>
+        <a href="/logout"><button>🚪 로그아웃</button></a>
+    </div>
+</div>
+<h1>만킹쇼핑몰</h1>
 <button onclick="location.href='/products'">상품 보러가기</button>
 <a href="/posts">
     <button>게시판 가기</button>
 </a>
 
-<a href="/logout">로그아웃</a>
+
 </body>
 </html>
