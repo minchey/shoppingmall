@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 import com.example.loginproject.service.CommentService;
+import com.example.loginproject.repository.CommentRepository;
+import jakarta.servlet.http.HttpSession;
 
 
 @Controller
@@ -19,11 +21,13 @@ public class PostController {
 
     private final PostRepository postRepository;
     private final CommentService commentService;
+    private final CommentRepository commentRepository;
 
     @Autowired
-    public PostController(PostRepository postRepository, CommentService commentService) {
+    public PostController(PostRepository postRepository, CommentService commentService, CommentRepository commentRepository) {
         this.postRepository = postRepository;
         this.commentService = commentService;
+        this.commentRepository = commentRepository;
     }
 
     // 게시글 목록 보기
@@ -75,10 +79,16 @@ public class PostController {
 
     // 게시글 상세 보기
     @GetMapping("{id}")
-    public String viewPost(@PathVariable Long id, Model model) {
+    public String viewPost(@PathVariable Long id, Model model, HttpSession session) {
         Post post = postRepository.findById(id).orElse(null);
+        if (post == null) {
+            return "redirect:/posts"; // 또는 오류 페이지로 보내기
+        }
         model.addAttribute("post", post);
         model.addAttribute("comments", commentService.getCommentsByPost(post));
+
+        String loginUser = (String) session.getAttribute("loginUser");
+        model.addAttribute("loginUser", loginUser);
         return "postDetail"; // → templates/postDetail.html
     }
     //게시글 수정
@@ -105,6 +115,7 @@ public class PostController {
     //게시글 삭제
     @PostMapping("/{id}/delete")
     public String deletePost(@PathVariable Long id) {
+        commentRepository.deleteByPostId(id);
         postRepository.deleteById(id);
         return "redirect:/posts";
     }
