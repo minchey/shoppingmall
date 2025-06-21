@@ -4,6 +4,7 @@
   <title>게시글 상세보기</title>
 </head>
 <body>
+<div th:replace="fragments/nav :: nav"></div>
 <h2>📌 게시글 상세</h2>
 
 <p><strong>제목:</strong> <span th:text="${post.title}">제목</span></p>

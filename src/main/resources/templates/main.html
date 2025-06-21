@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head><title>Main Page</title></head>
 <body>
+<div th:replace="fragments/nav :: nav"></div>
 <!-- ✅ 상단 로그인/로그아웃 영역 -->
 <div style="text-align: right; margin-bottom: 20px;">
     <div th:if="${loginUser == null}">

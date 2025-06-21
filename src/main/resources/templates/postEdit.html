@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head><title>게시글 수정</title></head>
 <body>
+<div th:replace="fragments/nav :: nav"></div>
 <h2>✏️ 게시글 수정</h2>
 
 <form th:action="@{'/posts/' + ${post.id} + '/edit'}" method="post">
