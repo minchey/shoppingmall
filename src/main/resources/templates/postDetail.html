@@ -17,8 +17,33 @@
   <div th:unless="${post.isImage}">
     <a th:href="@{'/uploads/' + ${post.storedFilename}}" download th:text="${post.originalFilename}">파일 다운로드</a>
   </div>
-
 </div>
+
+<hr>
+
+<!-- ✅ 댓글 작성 폼 -->
+<h3>💬 댓글 작성</h3>
+<form th:action="@{/comment/add}" method="post">
+  <input type="hidden" name="postId" th:value="${post.id}">
+  <textarea name="content" rows="3" cols="50" required></textarea><br>
+  <button type="submit">등록</button>
+</form>
+
+<hr>
+
+<!-- ✅ 댓글 리스트 -->
+<h3>🗨 댓글</h3>
+<ul>
+  <li th:each="comment : ${comments}">
+    <strong th:text="${comment.author}">작성자</strong> -
+    <span th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">작성시간</span><br>
+    <span th:text="${comment.content}">댓글 내용</span>
+
+    <!-- 삭제 버튼 (작성자만 보이게 하려면 나중에 조건 추가) -->
+    <a th:href="@{'/comment/delete/' + ${comment.id} + '?postId=' + ${post.id}}">❌ 삭제</a>
+    <br><br>
+  </li>
+</ul>
 
 <form th:action="@{'/posts/' + ${post.id} + '/delete'}" method="post" style="display:inline;">
   <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">🗑 삭제</button>

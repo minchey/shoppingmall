@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
+import com.example.loginproject.service.CommentService;
 
 
 @Controller
@@ -17,10 +18,12 @@ import java.util.UUID;
 public class PostController {
 
     private final PostRepository postRepository;
+    private final CommentService commentService;
 
     @Autowired
-    public PostController(PostRepository postRepository) {
+    public PostController(PostRepository postRepository, CommentService commentService) {
         this.postRepository = postRepository;
+        this.commentService = commentService;
     }
 
     // 게시글 목록 보기
@@ -71,10 +74,11 @@ public class PostController {
 
 
     // 게시글 상세 보기
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public String viewPost(@PathVariable Long id, Model model) {
         Post post = postRepository.findById(id).orElse(null);
         model.addAttribute("post", post);
+        model.addAttribute("comments", commentService.getCommentsByPost(post));
         return "postDetail"; // → templates/postDetail.html
     }
     //게시글 수정
