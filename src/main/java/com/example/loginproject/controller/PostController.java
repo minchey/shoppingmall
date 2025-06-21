@@ -84,6 +84,11 @@ public class PostController {
         if (post == null) {
             return "redirect:/posts"; // 또는 오류 페이지로 보내기
         }
+
+        // ✅ 조회수 증가
+        post.setViewCount(post.getViewCount() + 1);
+        postRepository.save(post); // DB에 반영
+
         model.addAttribute("post", post);
         model.addAttribute("comments", commentService.getCommentsByPost(post));
 
@@ -91,6 +96,7 @@ public class PostController {
         model.addAttribute("loginUser", loginUser);
         return "postDetail"; // → templates/postDetail.html
     }
+
     //게시글 수정
     @GetMapping("/{id}/edit")
     public String editPostForm(@PathVariable Long id, Model model) {

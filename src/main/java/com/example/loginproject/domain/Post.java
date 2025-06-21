@@ -44,4 +44,8 @@ public class Post {
     @CreationTimestamp
     private LocalDateTime createdAt;  // ✨ 작성일 자동 저장
 
+    @Column(nullable = false)
+    private int viewCount = 0;
+
+
 }

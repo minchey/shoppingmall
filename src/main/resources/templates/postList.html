@@ -14,6 +14,7 @@
   <tr>
     <th>번호</th> <!-- 보기용 순번 -->
     <th>제목</th>
+    <th>조회수</th>
     <th>작성일</th>
   </tr>
   <tr th:each="post, stat : ${posts}">
@@ -22,6 +23,7 @@
       <a th:href="@{'/posts/' + ${post.id}}" th:text="${post.title}"></a>
 //
     </td>
+      <td th:text="${post.viewCount}">0</td>
     <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
     </td>
   </tr>
