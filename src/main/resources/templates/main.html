@@ -5,12 +5,12 @@
 <div th:replace="fragments/nav :: nav"></div>
 <!-- ✅ 상단 로그인/로그아웃 영역 -->
 <div style="text-align: right; margin-bottom: 20px;">
-    <div th:if="${loginUser == null}">
+    <div th:if="${session.loginUser == null}">
         <a href="/login"><button>🔐 로그인</button></a>
         <a href="/register"><button>📝 회원가입</button></a>
     </div>
-    <div th:if="${loginUser != null}">
-        <span th:text="'👋 ' + ${loginUser} + '님 환영합니다!'"></span>
+    <div th:if="${session.loginUser != null}">
+        <span th:text="'👋 ' + ${session.loginUser} + '님 환영합니다!'"></span>
         <a href="/logout"><button>🚪 로그아웃</button></a>
     </div>
 </div>
