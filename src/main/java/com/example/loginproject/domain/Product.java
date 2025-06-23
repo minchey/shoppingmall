@@ -28,4 +28,9 @@ public class Product {
         this.price = price;
         this.description = description;
     }
+    // Product.java (상품 엔티티에 추가)
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
 }

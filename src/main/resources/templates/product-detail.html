@@ -9,9 +9,13 @@
 <h1>상품 상세 정보</h1>
 
 <img th:src="@{'/uploads/' + ${product.imageFilename}}" width="200">
-<p><strong>ID:</strong> <span th:text="${product.id}">1</span></p>
+<!--<p><strong>ID:</strong> <span th:text="${product.id}">1</span></p>-->
 
 <p><strong>상품명:</strong> <span th:text="${product.name}">청바지</span></p>
+<p>
+  <strong>카테고리:</strong>
+  <span th:text="${product.category != null} ? ${product.category.name} : '없음'"></span>
+</p>
 <p><strong>가격:</strong> <span th:text="${product.price}">10000</span> 원</p>
 <p><strong>설명:</strong> <span th:text="${product.description}">설명 텍스트</span></p>
 

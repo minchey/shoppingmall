@@ -2,6 +2,9 @@ package com.example.loginproject.controller;
 
 import com.example.loginproject.domain.Product;
 import com.example.loginproject.service.ProductService;
+import com.example.loginproject.domain.Category;
+import com.example.loginproject.repository.CategoryRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,29 +14,34 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
-
 import java.util.List;
 
 @Controller
 public class ProductController {
 
     private final ProductService productService;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService,
+                             CategoryRepository categoryRepository) {
         this.productService = productService;
+        this.categoryRepository = categoryRepository;
     }
+
 
     // 상품 등록 폼
     @GetMapping("/products/new")
     public String showCreateForm(Model model) {
         model.addAttribute("product", new Product());
+        model.addAttribute("categories", categoryRepository.findAll()); // ✅ 추가
         return "product-form";
     }
 
     // 상품 등록 처리
     @PostMapping("/products/new")
     public String createProduct(@ModelAttribute Product product,
+                                @RequestParam("categoryId") Long categoryId,
                                 @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
 
         if (!imageFile.isEmpty()) {
@@ -47,6 +55,8 @@ public class ProductController {
 
             product.setImageFilename(savedFileName);  // DB에 파일명 저장
         }
+        Category category = categoryRepository.findById(categoryId).orElseThrow();
+        product.setCategory(category);
 
         productService.saveProduct(product);
         return "redirect:/products";
