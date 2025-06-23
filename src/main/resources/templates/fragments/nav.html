@@ -1,28 +1,29 @@
-<!-- nav.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" href="/css/style.css">
 </head>
-<body>
 <nav th:fragment="nav">
-  <!-- 왼쪽 메뉴 -->
-  <div style="float: left;">
-    <a href="/main">홈</a>
-    <a href="/posts">게시판</a>
-    <a href="/products">상품</a>
-  </div>
+  <div class="nav-inner">
+    <!-- 왼쪽 -->
+    <div class="nav-left">
+      <a href="/main">🏠 홈</a>
+      <a href="/products">🛍️ 상품</a>
+      <a href="/posts">❓ Q&A</a>
+    </div>
 
-  <!-- 오른쪽 로그인/로그아웃 -->
-  <div style="float: right;">
-    <span th:if="${session.loginUser != null}" th:text="|${session.loginUser}님|"></span>
-    <a th:if="${session.loginUser == null}" href="/login">로그인</a>
-    <a th:if="${session.loginUser == null}" href="/register">회원가입</a>
-    <a th:if="${session.loginUser != null}" href="/logout">로그아웃</a>
-  </div>
+    <!-- 가운데 로고 -->
+    <div class="nav-center">
+      <a href="/main">🛍️ 만킹 쇼핑몰</a>
+    </div>
 
-  <div style="clear: both;"></div> <!-- float 해제 -->
-  <hr>
+    <!-- 오른쪽 -->
+    <div class="nav-right">
+      <span th:if="${session.loginUser != null}" th:text="|👋 ${session.loginUser}님|"></span>
+      <a th:if="${session.loginUser != null}" href="/logout">📕 로그아웃</a>
+      <a th:if="${session.loginUser == null}" href="/login">🔐 로그인</a>
+      <a th:if="${session.loginUser == null}" href="/register">📝 회원가입</a>
+    </div>
+  </div>
 </nav>
-</body>
-</html>

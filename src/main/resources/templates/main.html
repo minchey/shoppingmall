@@ -1,25 +1,72 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><title>Main Page</title></head>
-<body>
-<div th:replace="fragments/nav :: nav"></div>
-<!-- ✅ 상단 로그인/로그아웃 영역 -->
-<div style="text-align: right; margin-bottom: 20px;">
-    <div th:if="${session.loginUser == null}">
-        <a href="/login"><button>🔐 로그인</button></a>
-        <a href="/register"><button>📝 회원가입</button></a>
-    </div>
-    <div th:if="${session.loginUser != null}">
-        <span th:text="'👋 ' + ${session.loginUser} + '님 환영합니다!'"></span>
-        <a href="/logout"><button>🚪 로그아웃</button></a>
-    </div>
-</div>
-<h1>만킹쇼핑몰</h1>
-<button onclick="location.href='/products'">상품 보러가기</button>
-<a href="/posts">
-    <button>게시판 가기</button>
-</a>
+<head>
+    <meta charset="UTF-8">
+    <title>만킹쇼핑몰</title>
+    <link rel="stylesheet" href="/css/style.css">
 
+    <style>
+
+      body {
+          font-family: 'Arial', sans-serif;
+          background-color: #f7f9fc;
+          text-align: center;
+          padding: 50px;
+          margin: 0;
+      }
+      h1 {
+          font-size: 42px;
+          color: #2c3e50;
+          margin-bottom: 20px;
+      }
+      .welcome {
+          font-size: 18px;
+          color: #555;
+          margin-bottom: 30px;
+          text-align: right;
+          padding-right: 20px;
+      }
+      .btn-group {
+          margin-top: 40px;
+      }
+      .btn-group button {
+          margin: 10px;
+          padding: 15px 30px;
+          font-size: 18px;
+          border-radius: 10px;
+          border: none;
+          background-color: #3498db;
+          color: white;
+          cursor: pointer;
+          transition: background-color 0.3s;
+      }
+      .btn-group button:hover {
+          background-color: #2980b9;
+      }
+      .auth-buttons {
+          position: absolute;
+          top: 20px;
+          right: 30px;
+      }
+      .auth-buttons button {
+          margin-left: 10px;
+      }
+    </style>
+</head>
+<body>
+
+    <div th:replace="fragments/nav :: nav"></div>
+
+
+
+<!-- 메인 타이틀 -->
+<h1>🛍️ 만킹쇼핑몰에 오신 걸 환영합니다!</h1>
+
+<!-- 메인 버튼 그룹 -->
+<div class="btn-group">
+    <button onclick="location.href='/products'">상품 보러가기</button>
+    <button onclick="location.href='/posts'">Q&A 가기</button>
+</div>
 
 </body>
 </html>
