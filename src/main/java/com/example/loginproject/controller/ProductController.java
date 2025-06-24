@@ -89,4 +89,10 @@ public class ProductController {
         model.addAttribute("products", products);
         return "products";
     }
+    // 상품 삭제 처리
+    @PostMapping("/products/{id}/delete")
+    public String deleteProduct(@PathVariable Long id) {
+        productService.deleteProductById(id);
+        return "redirect:/products";
+    }
 }

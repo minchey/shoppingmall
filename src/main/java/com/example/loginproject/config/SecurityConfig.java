@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,11 +23,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())
+                .csrf(Customizer.withDefaults()) // 또는 아예 .csrf() 생략해도 기본은 활성화됨
+
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/register", "/login", "/check-username", "/main",
                                 "/css/**", "/js/**","/").permitAll()
-                        .requestMatchers("/products/**").permitAll()
+                        .requestMatchers("/products", "/products/search", "/products/{id}").permitAll()
                         .requestMatchers("/posts/**").authenticated()
                         .anyRequest().authenticated()
                 )

@@ -34,4 +34,7 @@ public class ProductService {
     public List<Product> searchProducts(String keyword) {
         return productRepository.findByNameContainingIgnoreCaseOrCategory_NameContainingIgnoreCase(keyword, keyword);
     }
+    public void deleteProductById(Long id) {
+        productRepository.deleteById(id);
+    }
 }
