@@ -72,6 +72,10 @@
 
 <div class="product-container">
     <h1>🛍️ 상품 목록</h1>
+    <form action="/products/search" method="get" style="margin-bottom: 20px;">
+        <input type="text" name="keyword" placeholder="상품명 또는 카테고리명으로 검색">
+        <button type="submit">🔍 검색</button>
+    </form>
 
     <table>
         <tr>
@@ -92,6 +96,10 @@
             </td>
             <td th:text="${product.category?.name} ?: '없음'"></td>
         </tr>
+        <tr th:if="${#lists.isEmpty(products)}">
+            <td colspan="6">검색 결과가 없습니다.</td>
+        </tr>
+
     </table>
 
     <div class="button-row">
