@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>주문서 작성</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .order-container {
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    form label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    form input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .product-summary {
+      margin-top: 30px;
+      padding: 15px;
+      background-color: #f7f7f7;
+      border-radius: 8px;
+    }
+
+    .submit-button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background-color: #3498db;
+      color: white;
+      font-size: 1em;
+      border: none;
+      border-radius: 6px;
+      margin-top: 30px;
+      cursor: pointer;
+    }
+
+    .submit-button:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+<div th:replace="fragments/nav :: nav"></div>
+
+<div class="order-container">
+  <h1>📦 주문서 작성</h1>
+
+  <form th:action="@{/order}" method="post">
+    <label>배송지 주소</label>
+    <textarea name="address" placeholder="주소를 입력하세요" required></textarea>
+
+    <div class="product-summary">
+      <h3>🛒 주문 상품 목록</h3>
+      <ul>
+        <li th:each="item : ${cart}" th:text="|${item.productName} x ${item.quantity}개 (₩${item.price})|"></li>
+      </ul>
+
+      <p style="text-align:right; margin-top: 10px;">
+        총 결제 금액:
+        <strong th:text="'₩' + ${#numbers.formatInteger(totalPrice, 3, 'COMMA')}"></strong>
+      </p>
+
+    </div>
+
+    <button type="submit" class="submit-button">💳 결제하기</button>
+  </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>주문 완료</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .complete-container {
+      max-width: 600px;
+      margin: 100px auto;
+      padding: 40px;
+      background-color: #fdfdfd;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      color: #2ecc71;
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 1.2em;
+      margin-bottom: 30px;
+    }
+
+    .complete-container a button {
+      padding: 12px 24px;
+      background-color: #3498db;
+      color: white;
+      font-size: 1em;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .complete-container a button:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+<div th:replace="fragments/nav :: nav"></div>
+
+<div class="complete-container">
+  <h1>✅ 주문이 완료되었습니다!</h1>
+  <p>소중한 주문 감사합니다.<br>빠르게 배송해드릴게요 🚚</p>
+
+  <a href="/products">
+    <button>상품 더 둘러보기</button>
+  </a>
+</div>
+</body>
+</html>
