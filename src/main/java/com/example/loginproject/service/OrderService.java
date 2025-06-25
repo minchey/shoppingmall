@@ -52,4 +52,7 @@ public class OrderService {
         // Cascade 옵션 덕분에 orderItem도 같이 저장됨
         orderRepository.save(order);
     }
+    public List<Order> getOrdersByMember(Member member) {
+        return orderRepository.findByMember(member);
+    }
 }

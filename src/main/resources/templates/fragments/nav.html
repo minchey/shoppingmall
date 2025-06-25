@@ -21,6 +21,7 @@
     <!-- 오른쪽 -->
     <div class="nav-right">
       <span th:if="${session.loginUser != null}" th:text="|👋 ${session.loginUser}님|"></span>
+      <a href="/mypage">마이페이지</a>
       <a th:if="${session.loginUser != null}" href="/cart">장바구니</a>
       <a th:if="${session.loginUser != null}" href="/logout">📕 로그아웃</a>
       <a th:if="${session.loginUser == null}" href="/login">🔐 로그인</a>

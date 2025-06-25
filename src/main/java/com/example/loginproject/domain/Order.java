@@ -9,7 +9,7 @@ import java.util.List;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "`orders`")   
+@Table(name = "`orders`")
 public class Order {
 
     @Id

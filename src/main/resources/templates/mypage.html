@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>마이페이지</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .mypage-container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .info, .orders {
+      margin-bottom: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+<div th:replace="fragments/nav :: nav"></div>
+
+<div class="mypage-container">
+  <h1>👤 마이페이지</h1>
+
+  <div class="info">
+    <h3>회원 정보</h3>
+    <p><strong>아이디:</strong> <span th:text="${member.username}"></span></p>
+    <p><strong>전화번호:</strong> <span th:text="${member.phoneNumber}"></span></p>
+  </div>
+
+  <div class="orders">
+    <h3>🛍 주문 내역</h3>
+    <table th:if="${orders != null and !orders.isEmpty()}">
+      <thead>
+      <tr>
+        <th>주문번호</th>
+        <th>주문일자</th>
+        <th>총 금액</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="order : ${orders}">
+        <td th:text="${order.id}">1</td>
+        <td th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd HH:mm')}">2025-06-26</td>
+        <td th:text="'₩' + ${#numbers.formatInteger(order.totalPrice, 3, 'COMMA')}">₩10000</td>
+      </tr>
+      </tbody>
+    </table>
+    <div th:if="${orders == null or orders.isEmpty()}" style="text-align:center; margin-top: 20px;">
+      <p>주문 내역이 없습니다.</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>
