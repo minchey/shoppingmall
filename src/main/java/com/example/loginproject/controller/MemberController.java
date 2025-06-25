@@ -50,9 +50,13 @@ public class MemberController {
         memberService.register(
                 memberRequest.getUsername(),
                 memberRequest.getPassword(),
-                memberRequest.getSsn(),
-                memberRequest.getPhoneNumber()
+                memberRequest.getName(),
+                memberRequest.getGender(),
+                memberRequest.getPhoneNumber(),
+                memberRequest.getAddress(),
+                memberRequest.getSsn()
         );
+
 
         return "redirect:/login";
     }

@@ -1,78 +1,179 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+  <meta charset="UTF-8">
   <title>게시글 상세보기</title>
   <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2, h3 {
+      color: #2c3e50;
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .info {
+      margin-bottom: 20px;
+    }
+
+    .post-image img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .file-download {
+      margin-top: 10px;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      margin-bottom: 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .btn-delete {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    .btn-delete:hover {
+      background-color: #c0392b;
+    }
+
+    .btn-edit {
+      background-color: #3498db;
+      color: white;
+    }
+
+    .btn-edit:hover {
+      background-color: #2980b9;
+    }
+
+    .btn-comment {
+      background-color: #2ecc71;
+      color: white;
+    }
+
+    .btn-comment:hover {
+      background-color: #27ae60;
+    }
+
+    .comment {
+      border-top: 1px solid #ddd;
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+
+    .nav-links {
+      margin-top: 30px;
+    }
+
+    .nav-links a {
+      margin-right: 15px;
+      text-decoration: none;
+      color: #3498db;
+      font-weight: bold;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-<div th:replace="fragments/nav :: nav"></div>
-<h2>📌 게시글 상세</h2>
 
-<p><strong>제목:</strong> <span th:text="${post.title}">제목</span></p>
-<p>👀 조회수: <span th:text="${post.viewCount}">0</span></p>
-<p><strong>내용:</strong></p>
-<p th:text="${post.content}">내용</p>
+<div th:replace="~{fragments/nav :: nav}"></div>
 
-<!-- 첨부파일 구분 표시 -->
-<div th:if="${post.storedFilename != null}">
-  <div th:if="${post.isImage}">
-    <img th:src="@{'/uploads/|${post.storedFilename}|'}" width="300">
+<div class="container">
+
+  <h2>📌 게시글 상세</h2>
+
+  <div class="info">
+    <p><strong>제목:</strong> <span th:text="${post.title}">제목</span></p>
+    <p>👀 조회수: <span th:text="${post.viewCount}">0</span></p>
+    <p><strong>내용:</strong></p>
+    <p th:text="${post.content}">내용</p>
+
+    <!-- 첨부파일 -->
+    <div class="post-image" th:if="${post.storedFilename != null}">
+      <div th:if="${post.isImage}">
+        <img th:src="@{'/uploads/' + ${post.storedFilename}}" alt="첨부 이미지">
+      </div>
+      <div th:unless="${post.isImage}" class="file-download">
+        <a th:href="@{'/uploads/' + ${post.storedFilename}}" download th:text="${post.originalFilename}">파일 다운로드</a>
+      </div>
+    </div>
   </div>
-  <div th:unless="${post.isImage}">
-    <a th:href="@{'/uploads/|${post.storedFilename}|'}"
-       download
-       th:text="${post.originalFilename}">파일 다운로드</a>
+
+  <h3>💬 댓글 작성</h3>
+  <form th:action="@{/comment/add}" method="post">
+    <input type="hidden" name="postId" th:value="${post.id}">
+    <textarea name="content" rows="3" required></textarea><br>
+    <button type="submit" class="btn-comment">등록</button>
+  </form>
+
+  <h3>🗨 댓글</h3>
+  <ul>
+    <li th:each="comment : ${comments}" class="comment">
+      <strong th:text="${comment.author ?: '익명'}">작성자</strong> -
+      <span th:text="${comment.createdAt != null ? #temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm') : '시간 없음'}">작성시간</span><br>
+      <span th:text="${comment.content ?: '내용 없음'}">댓글 내용</span>
+      <div th:if="${loginUser != null and comment.author == loginUser and comment.id != null and post != null and post.id != null}">
+        <form th:action="@{/comment/delete/{id}(id=${comment.id})}" method="get">
+          <input type="hidden" name="postId" th:value="${post.id}">
+          <button type="submit" class="btn-delete">삭제</button>
+        </form>
+      </div>
+    </li>
+  </ul>
+
+  <div class="btn-row" th:if="${loginUser != null}">
+    <form th:action="@{'/posts/' + ${post.id} + '/delete'}" method="post" style="display:inline;">
+      <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')" class="btn-delete">🗑 삭제</button>
+    </form>
+    <a th:href="@{'/posts/' + ${post.id} + '/edit'}">
+      <button class="btn-edit">✏️ 수정</button>
+    </a>
   </div>
+
+  <div class="nav-links">
+    <a href="/posts">🔙 목록으로 돌아가기</a>
+    <a href="/main">🏠 홈으로</a>
+  </div>
+
 </div>
 
-<hr>
-
-<!-- ✅ 댓글 작성 폼 -->
-<h3>💬 댓글 작성</h3>
-<form th:action="@{/comment/add}" method="post">
-  <input type="hidden" name="postId" th:value="${post.id}">
-  <textarea name="content" rows="3" cols="50" required></textarea><br>
-  <button type="submit">등록</button>
-</form>
-
-<hr>
-
-<!-- ✅ 댓글 리스트-->
-<h3>🗨 댓글</h3>
-<ul>
-  <!-- ✅ 댓글 삭제 버튼: ID가 null인 경우 파싱 방지 -->
-  <li th:each="comment : ${comments}">
-    <strong th:text="${comment.author ?: '익명'}">작성자</strong> -
-    <span th:text="${comment.createdAt != null ? #temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm') : '시간 없음'}">작성시간</span><br>
-    <span th:text="${comment.content ?: '내용 없음'}">댓글 내용</span>
-
-    <!-- 🔒 null-safe 삭제 버튼 처리 -->
-    <div th:if="${loginUser != null and comment.author == loginUser and comment.id != null and post != null and post.id != null}">
-      <form th:action="@{/comment/delete/{id}(id=${comment.id})}" method="get">
-        <input type="hidden" name="postId" th:value="${post.id}">
-        <button type="submit">삭제</button>
-      </form>
-    </div>
-
-    <br><br>
-  </li>
-
-</ul>
-
-
-<!-- 수정 / 삭제 버튼 -->
-<form th:action="@{'/posts/' + ${post.id} + '/delete'}" method="post" style="display:inline;">
-  <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">🗑 삭제</button>
-</form>
-<a th:href="@{'/posts/' + ${post.id} + '/edit'}">
-  <button>✏️ 수정</button>
-</a>
-
-<!-- 네비게이션 -->
-<br><br>
-<a href="/posts">🔙 목록으로 돌아가기</a>
-<a href="/main">
-  <button>🏠 홈으로</button>
-</a>
 </body>
 </html>

@@ -4,29 +4,117 @@
   <meta charset="UTF-8">
   <title>상품 상세</title>
   <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body {
+      background-color: #f4f4f4;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .detail-container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      display: flex;
+      gap: 30px;
+    }
+
+    .detail-image img {
+      width: 300px;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .detail-info {
+      flex: 1;
+    }
+
+    .detail-info h2 {
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+
+    .detail-info p {
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    .detail-info strong {
+      color: #555;
+    }
+
+    .btn-row {
+      margin-top: 20px;
+    }
+
+    .btn-row button {
+      padding: 10px 18px;
+      margin-right: 10px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-row .delete-btn {
+      background-color: red;
+      color: white;
+    }
+
+    .btn-row .delete-btn:hover {
+      background-color: darkred;
+    }
+
+    .btn-row .back-btn {
+      background-color: #3498db;
+      color: white;
+    }
+
+    .btn-row .back-btn:hover {
+      background-color: #2980b9;
+    }
+  </style>
 </head>
 <body>
-<div th:replace="fragments/nav :: nav"></div>
-<h1>상품 상세 정보</h1>
 
-<img th:src="@{'/uploads/' + ${product.imageFilename}}" width="200">
+<div th:replace="~{fragments/nav :: nav}"></div>
 
-<p><strong>상품명:</strong> <span th:text="${product.name}">청바지</span></p>
-<p>
-  <strong>카테고리:</strong>
-  <span th:text="${product.category != null ? product.category.name : '없음'}"></span>
-</p>
-<p><strong>가격:</strong> <span th:text="${product.price}">10000</span> 원</p>
-<p><strong>설명:</strong> <span th:text="${product.description}">설명 텍스트</span></p>
+<div class="detail-container">
+  <div class="detail-image">
+    <img th:src="@{'/uploads/' + ${product.imageFilename}}" alt="상품 이미지">
+  </div>
 
-<br>
-<form th:action="@{/products/{id}/delete(id=${product.id})}" method="post"
-      onsubmit="return confirm('정말 삭제하시겠습니까?');">
-  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-  <button type="submit" style="background-color: red; color: white;">🗑️ 삭제</button>
-</form>
-<br>
-<a href="/products"><button>상품 목록</button></a>
-<a href="/main"><button>메인으로</button></a>
+  <div class="detail-info">
+    <h2 th:text="${product.name}">상품명</h2>
+    <!-- 카테고리 출력 -->
+    <p><strong>카테고리:</strong>
+      <span th:if="${product.category != null}" th:text="${product.category.name}">카테고리명</span>
+      <span th:unless="${product.category != null}">없음</span>
+    </p>
+    <p><strong>가격:</strong> <span th:text="${product.price}">10000</span> 원</p>
+    <p><strong>설명:</strong></p>
+    <p th:text="${product.description}">상품 설명</p>
+
+    <form th:action="@{/cart/add}" method="post">
+      <input type="hidden" name="productId" th:value="${product.id}" />
+      <button type="submit">🛒 장바구니 담기</button>
+    </form>
+
+    <!-- 삭제 버튼 (작성자만 볼 수 있게) -->
+    <div th:if="${product.writer != null and session.loginUser == product.writer.username}">
+      <form th:action="@{/products/{id}/delete(id=${product.id})}" method="post"
+            onsubmit="return confirm('정말 삭제하시겠습니까?');" style="display:inline;">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <button type="submit" class="delete-btn">🗑️ 삭제</button>
+      </form>
+    </div>
+      <a href="/products"><button class="back-btn">← 목록</button></a>
+      <a href="/main"><button class="back-btn">🏠 메인</button></a>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

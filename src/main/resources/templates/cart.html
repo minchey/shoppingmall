@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>장바구니</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .cart-container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: white;
+    }
+
+    th, td {
+        padding: 15px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .total-price {
+        text-align: right;
+        margin-top: 20px;
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+
+    .button-row {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .button-row button {
+        padding: 10px 20px;
+        margin: 0 10px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .button-row button:hover {
+        background-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+<div th:replace="fragments/nav :: nav"></div>
+
+<div class="cart-container">
+  <h1>🛒 장바구니</h1>
+
+  <table th:if="${cart != null and !cart.isEmpty()}">
+    <thead>
+    <tr>
+      <th>이미지</th>
+      <th>상품명</th>
+      <th>수량</th>
+      <th>가격</th>
+      <th>합계</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${cart}">
+      <td><img th:src="@{'/uploads/' + ${item.imageFilename}}" alt="상품 이미지"/></td>
+      <td th:text="${item.productName}">상품명</td>
+      <td>
+        <form th:action="@{/cart/update}" method="post">
+          <input type="hidden" name="productId" th:value="${item.productId}" />
+          <input type="number" name="quantity" th:value="${item.quantity}" min="1" style="width:60px;" />
+          <button type="submit">변경</button>
+        </form>
+      </td>
+     
+
+      <td th:text="'₩' + ${item.price}">가격</td>
+      <td th:text="'₩' + ${item.price * item.quantity}">합계</td>
+      <td>
+        <form th:action="@{/cart/delete}" method="post">
+          <input type="hidden" name="productId" th:value="${item.productId}" />
+          <button type="submit" style="background-color: red;">삭제</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div th:if="${cart == null or cart.isEmpty()}" style="text-align:center; margin-top: 40px;">
+    <p>장바구니가 비어있습니다.</p>
+  </div>
+
+  <!-- ✅ 총합계 계산 (컨트롤러에서 totalPrice 계산해서 넘겨줘도 됨) -->
+  <div class="total-price" th:if="${cart != null}">
+    총 합계:
+    <span th:text="'₩' + ${#numbers.formatInteger(totalPrice, 3, 'COMMA')}"></span>
+  </div>
+
+  <div class="button-row">
+    <a href="/products"><button>상품 계속 보기</button></a>
+    <a href="/order"><button>결제하기</button></a> <!-- 다음 단계에서 만들 기능 -->
+  </div>
+</div>
+</body>
+</html>

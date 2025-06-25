@@ -26,11 +26,14 @@ public class MemberService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
     // 회원가입 (비밀번호 암호화 포함)
-    public void register(String username, String rawPassword, String ssn, String phoneNumber) {
+    public void register(String username, String rawPassword, String name,
+                         String gender, String phoneNumber, String address, String ssn) {
         String encodedPassword = passwordEncoder.encode(rawPassword);
-        Member member = new Member(username, encodedPassword, ssn, phoneNumber);
+
+        Member member = new Member(username, encodedPassword, name, gender, phoneNumber, address, ssn);
         memberRepository.save(member);
     }
+
 
     // Spring Security가 로그인 시 자동으로 호출함
     @Override
@@ -46,5 +49,8 @@ public class MemberService implements UserDetailsService {
     }
     public boolean isUsernameDuplicate(String username) {
         return memberRepository.findByUsername(username).isPresent();
+    }
+    public Member findByUsername(String username) {
+        return memberRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("사용자 없음"));
     }
 }

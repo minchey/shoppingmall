@@ -1,33 +1,116 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+  <meta charset="UTF-8">
   <title>게시판</title>
   <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 50px auto;
+      padding: 30px;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .top-bar a button {
+      padding: 10px 18px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .top-bar a button:hover {
+      background-color: #2980b9;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+    }
+
+    th, td {
+      padding: 14px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #ecf0f1;
+      color: #2c3e50;
+    }
+
+    tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    a.title-link {
+      text-decoration: none;
+      color: #2c3e50;
+      font-weight: bold;
+    }
+
+    a.title-link:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-<div th:replace="fragments/nav :: nav"></div>
-<a href="/main">
-  <button>🏠 홈으로</button>
-</a>
-<h2>📋 게시글 목록</h2>
-<a href="/posts/new"><button type="button">글쓰기</button></a>
-<br><br>
-<table border="1">
-  <tr>
-    <th>번호</th> <!-- 보기용 순번 -->
-    <th>제목</th>
-    <th>작성일</th>
-    <th>조회수</th>
-  </tr>
-  <tr th:each="post, stat : ${posts}">
-    <td th:text="${stat.count}"></td> <!-- 1부터 시작하는 순번 -->
-    <td>
-      <a th:href="@{'/posts/' + ${post.id}}" th:text="${post.title}"></a>
-    </td>
-    <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
-    <td th:text="${post.viewCount}">0</td>
-    </td>
-  </tr>
-</table>
+
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<div class="container">
+  <div class="top-bar">
+    <a href="/main"><button>🏠 홈으로</button></a>
+    <a href="/posts/new"><button>✏️ 글쓰기</button></a>
+  </div>
+
+  <h2>📋 게시글 목록</h2>
+
+  <table>
+    <thead>
+    <tr>
+      <th>번호</th>
+      <th>제목</th>
+      <th>작성일</th>
+      <th>조회수</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="post, stat : ${posts}">
+      <td th:text="${stat.count}"></td>
+      <td>
+        <a th:href="@{'/posts/' + ${post.id}}" th:text="${post.title}" class="title-link"></a>
+      </td>
+      <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+      <td th:text="${post.viewCount}"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
 </body>
 </html>

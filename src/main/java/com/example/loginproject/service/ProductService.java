@@ -4,6 +4,8 @@ import com.example.loginproject.domain.Product;
 import com.example.loginproject.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -36,5 +38,8 @@ public class ProductService {
     }
     public void deleteProductById(Long id) {
         productRepository.deleteById(id);
+    }
+    public Page<Product> getProductPage(Pageable pageable) {
+        return productRepository.findAll(pageable);  // JPA 기본 제공
     }
 }

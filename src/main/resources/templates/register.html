@@ -1,67 +1,146 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><title>회원가입</title>
+<head>
+    <title>회원가입</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* 스타일은 기존 그대로 유지 */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .register-container {
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #444;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .error {
+            color: red;
+            font-size: 12px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+        .button-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+        .secondary-btn {
+            background-color: #ccc;
+            color: black;
+        }
+        .secondary-btn:hover {
+            background-color: #aaa;
+        }
+        #checkResult {
+            font-size: 12px;
+            margin-top: -8px;
+            margin-bottom: 8px;
+        }
+    </style>
     <script>
         function checkUsername() {
             const username = document.getElementById("username").value;
-            console.log("[JS] 입력된 username:", username); // 디버깅용 로그
-
             fetch("/check-username?username=" + username + "&ts=" + new Date().getTime())
                 .then(res => res.text())
                 .then(result => {
                     const resultDiv = document.getElementById("checkResult");
-                    if (result === "duplicate") {
-                        resultDiv.innerText = "❌ 이미 사용 중인 아이디입니다.";
-                        resultDiv.style.color = "red";
-                    } else {
-                        resultDiv.innerText = "✅ 사용 가능한 아이디입니다.";
-                        resultDiv.style.color = "green";
-                    }
+                    resultDiv.innerText = result === "duplicate"
+                        ? "❌ 이미 사용 중인 아이디입니다."
+                        : "✅ 사용 가능한 아이디입니다.";
+                    resultDiv.style.color = result === "duplicate" ? "red" : "green";
                 })
-                .catch(err => console.error("중복확인 fetch 실패:", err));
+                .catch(err => console.error("중복확인 실패:", err));
         }
     </script>
-    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h2>회원가입</h2>
+<div class="register-container">
+    <h2>회원가입</h2>
 
-<!-- 에러 메시지 출력 -->
-<div th:if="${error}">
-    <p style="color:red;" th:text="${error}"></p>
-</div>
-
-<form th:action="@{/register}" method="post" th:object="${memberRequest}">
-    <label>아이디:
-        <input type="text" th:field="*{username}" />
+    <form th:action="@{/register}" method="post" th:object="${memberRequest}">
+        <label>아이디</label>
+        <input type="text" th:field="*{username}" id="username" required />
         <button type="button" onclick="checkUsername()">중복확인</button>
-        <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style="color:red;"></div>
-    </label><br/>
+        <div id="checkResult"></div>
+        <div class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
 
-    <label>비밀번호:
-        <input type="password" th:field="*{password}" />
-        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red;"></div>
-    </label><br/>
+        <label>비밀번호</label>
+        <input type="password" th:field="*{password}" required />
+        <div class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
 
-    <label>비밀번호 확인:
-        <input type="password" th:field="*{confirmPassword}" />
-        <div th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" style="color:red;"></div>
-    </label><br/>
+        <label>비밀번호 확인</label>
+        <input type="password" th:field="*{confirmPassword}" required />
+        <div class="error" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
 
-    <label>주민등록번호:
-        <input type="text" th:field="*{ssn}" />
-        <div th:if="${#fields.hasErrors('ssn')}" th:errors="*{ssn}" style="color:red;"></div>
-    </label><br/>
+        <label>이름</label>
+        <input type="text" th:field="*{name}" required />
+        <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
 
-    <label>전화번호:
-        <input type="text" th:field="*{phoneNumber}" />
-        <div th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" style="color:red;"></div>
-    </label><br/>
+        <label>성별</label>
+        <select th:field="*{gender}" required>
+            <option value="">선택</option>
+            <option value="남">남</option>
+            <option value="여">여</option>
+        </select>
+        <div class="error" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></div>
 
-    <div th:if="${error}" style="color:red;">[[${error}]]</div>
+        <label>전화번호</label>
+        <input type="text" th:field="*{phoneNumber}" required />
+        <div class="error" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></div>
 
-    <button type="submit">가입하기</button>
-</form>
+        <label>주소</label>
+        <input type="text" th:field="*{address}" required />
+        <div class="error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
 
+        <label>주민등록번호</label>
+        <input type="text" th:field="*{ssn}" required />
+        <div class="error" th:if="${#fields.hasErrors('ssn')}" th:errors="*{ssn}"></div>
+
+        <div class="button-row">
+            <button type="submit" class="submit-btn">가입하기</button>
+            <a href="/login"><button type="button" class="secondary-btn">로그인으로</button></a>
+        </div>
+    </form>
+</div>
 </body>
 </html>

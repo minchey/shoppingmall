@@ -1,18 +1,103 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><title>게시글 수정</title></head>
-<link rel="stylesheet" href="/css/style.css">
+<head>
+  <meta charset="UTF-8">
+  <title>✏️ 게시글 수정</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      color: #2c3e50;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-top: 16px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    .button-group {
+      margin-top: 24px;
+      text-align: center;
+    }
+
+    .button-group button {
+      padding: 12px 24px;
+      margin: 0 10px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .submit-btn {
+      background-color: #f39c12;
+      color: white;
+    }
+
+    .submit-btn:hover {
+      background-color: #e67e22;
+    }
+
+    .back-btn {
+      background-color: #3498db;
+      color: white;
+    }
+
+    .back-btn:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
 <body>
-<div th:replace="fragments/nav :: nav"></div>
-<h2>✏️ 게시글 수정</h2>
 
-<form th:action="@{'/posts/' + ${post.id} + '/edit'}" method="post">
-  <label>제목: <input type="text" name="title" th:value="${post.title}" required></label><br><br>
-  <label>내용:</label><br>
-  <textarea name="content" rows="8" cols="50" th:text="${post.content}"></textarea><br><br>
-  <button type="submit">수정 완료</button>
-</form>
+<div th:replace="~{fragments/nav :: nav}"></div>
 
-<a th:href="@{'/posts/' + ${post.id}}">🔙 돌아가기</a>
+<div class="container">
+  <h2>✏️ 게시글 수정</h2>
+
+  <form th:action="@{'/posts/' + ${post.id} + '/edit'}" method="post">
+    <label for="title">제목</label>
+    <input type="text" id="title" name="title" th:value="${post.title}" required>
+
+    <label for="content">내용</label>
+    <textarea id="content" name="content" rows="8" th:text="${post.content}"></textarea>
+
+    <div class="button-group">
+      <button type="submit" class="submit-btn">수정 완료</button>
+      <a th:href="@{'/posts/' + ${post.id}}"><button type="button" class="back-btn">돌아가기</button></a>
+    </div>
+  </form>
+</div>
+
 </body>
 </html>

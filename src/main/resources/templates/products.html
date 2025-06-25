@@ -69,17 +69,17 @@
             background-color: #2980b9;
         }
 
-         .product-card a.product-name-link {
+        .product-card a.product-name-link {
             color: #2c3e50;
             text-decoration: none;
             font-weight: bold;
             font-size: 1.1em;
-    }
+        }
 
         .product-card a.product-name-link:hover {
             text-decoration: underline;
-             color: #2980b9;
-    }
+            color: #2980b9;
+        }
 
         .button-row {
             margin-top: 30px;
@@ -100,6 +100,31 @@
         .button-row button:hover {
             background-color: #2980b9;
         }
+
+        .pagination {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .pagination button {
+            margin: 0 5px;
+            padding: 6px 12px;
+            border: none;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .pagination button:hover {
+            background-color: #bdc3c7;
+        }
+
+        .pagination button.active-page {
+            background-color: #2ecc71;
+            color: white;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -114,23 +139,52 @@
     </form>
 
     <div class="product-grid">
-        <div class="product-card" th:each="product : ${products}">
+        <div class="product-card" th:each="product : ${productPage.content}">
             <img th:src="@{'/uploads/' + ${product.imageFilename}}" alt="상품 이미지">
             <h3>
-                <a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.name}"
-                            class="product-name-link"></a>
+                <a th:href="@{/products/{id}(id=${product.id})}"
+                   th:text="${product.name}"
+                   class="product-name-link"></a>
             </h3>
 
-            <p th:text="'₩' + ${product.price} "></p>
+            <p th:text="'₩' + ${product.price}"></p>
             <p th:text="${product.category?.name} ?: '카테고리 없음'"></p>
             <a th:href="@{/products/{id}(id=${product.id})}">
                 <button>상세보기</button>
             </a>
+            <form th:action="@{/cart/add}" method="post" style="margin-top: 10px;">
+                <input type="hidden" name="productId" th:value="${product.id}" />
+                <button type="submit">🛒 장바구니담기</button>
+            </form>
+
         </div>
     </div>
 
-    <div th:if="${#lists.isEmpty(products)}" style="text-align: center; margin-top: 30px;">
+    <div th:if="${productPage.content.isEmpty()}" style="text-align: center; margin-top: 30px;">
         <p>검색 결과가 없습니다.</p>
+    </div>
+
+    <!-- ✅ 페이지네이션 영역 -->
+    <div class="pagination" th:if="${productPage.totalPages >= 1}">
+        <span th:if="${productPage.hasPrevious()}">
+            <a th:href="@{/products(page=${productPage.number - 1})}">
+                <button>&laquo; 이전</button>
+            </a>
+        </span>
+
+        <span th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}">
+            <a th:href="@{/products(page=${i})}">
+                <button th:text="${i + 1}"
+                        th:classappend="${i == productPage.number} ? 'active-page' : ''">
+                </button>
+            </a>
+        </span>
+
+        <span th:if="${productPage.hasNext()}">
+            <a th:href="@{/products(page=${productPage.number + 1})}">
+                <button>다음 &raquo;</button>
+            </a>
+        </span>
     </div>
 
     <div class="button-row">

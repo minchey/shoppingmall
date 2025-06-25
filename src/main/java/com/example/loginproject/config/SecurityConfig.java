@@ -3,6 +3,7 @@ package com.example.loginproject.config;
 import com.example.loginproject.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpMethod;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,23 +21,21 @@ public class SecurityConfig {
     @Autowired
     private MemberService memberService;
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(Customizer.withDefaults()) // 또는 아예 .csrf() 생략해도 기본은 활성화됨
-
+                .csrf(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/login", "/check-username", "/main",
-                                "/css/**", "/js/**","/").permitAll()
-                        .requestMatchers("/products", "/products/search", "/products/{id}").permitAll()
-                        .requestMatchers("/posts/**").authenticated()
+                        .requestMatchers("/register", "/login", "/check-username", "/main", "/", "/css/**", "/js/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/products/*/delete").authenticated()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
                         .successHandler((request, response, authentication) -> {
-                            // 로그인 성공 시 세션에 username 저장
                             String username = authentication.getName();
                             request.getSession().setAttribute("loginUser", username);
                             response.sendRedirect("/main");
@@ -49,5 +48,4 @@ public class SecurityConfig {
                 )
                 .build();
     }
-
 }
