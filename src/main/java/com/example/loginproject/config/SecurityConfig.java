@@ -1,3 +1,5 @@
+//로그인 로그아웃 페이지접근 권한 설정
+
 package com.example.loginproject.config;
 
 import com.example.loginproject.service.MemberService;
@@ -14,8 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Configuration
-@EnableWebSecurity
+@Configuration //스프링 설정클래스 명시
+@EnableWebSecurity //Spring Security 활성화
 public class SecurityConfig {
 
     @Autowired
