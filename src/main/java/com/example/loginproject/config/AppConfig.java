@@ -10,6 +10,6 @@ public class AppConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(); //spring 기본 제공 암호화 코드. 단반향으로 복호화 불가능
     }
 }

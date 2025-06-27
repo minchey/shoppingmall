@@ -28,7 +28,7 @@ public class SecurityConfig {
                 .csrf(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/register", "/login", "/check-username", "/main", "/", "/css/**", "/js/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products/**").permitAll() //로그인 안해도 방문가능
                         .requestMatchers(HttpMethod.POST, "/products/*/delete").authenticated()
                         .anyRequest().authenticated()
                 )

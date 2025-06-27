@@ -68,21 +68,6 @@ public class MemberController {
         return isDuplicate ? "duplicate" : "ok";
     }
 
-   // @PostMapping("/login")
-   /* public String login(
-            @RequestParam String username,
-            @RequestParam String password,
-            HttpSession session
-    ) {
-        boolean result = memberService.login(username, password);
-
-        if (result) {
-            session.setAttribute("loginUser", username); // 로그인 정보 저장
-            return "redirect:/main"; // 로그인 성공 시 메인 페이지로 이동
-        } else {
-            return "redirect:/login?error"; // 실패 시 로그인 페이지로 이동
-        }
-    }*/
 
     @GetMapping("/login")
     public String loginForm() {
