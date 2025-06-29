@@ -12,7 +12,7 @@ public class WebConfig implements WebMvcConfigurer { //웹 관련 설정을 커�
 
     @Override //매서스 재정의
     public void addResourceHandlers(ResourceHandlerRegistry registry) { //경로지정 매서드 요청이 오면 실제 파일을 응답해주도록 처리하는 기능
-        Path uploadDir = Paths.get("uploads"); 
+        Path uploadDir = Paths.get("uploads");
         String uploadPath = uploadDir.toFile().getAbsolutePath();
 
         registry.addResourceHandler("/uploads/**")
