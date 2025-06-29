@@ -12,16 +12,16 @@ import org.springframework.validation.BindingResult;              // 에러 담�
 
 
 @Controller
-public class MemberController {
+public class MemberController { //웹 요청을 받는 클래스 선언
 
-    private final MemberService memberService;
+    private final MemberService memberService; //실제 비즈니스 로직을 처리하는 memberservice를 사용할 준비
 
-    @Autowired
+    @Autowired //스프링이 memberservice 자동으로 의존성 주입 -DI
     public MemberController(MemberService memberService) {
         this.memberService = memberService;
     }
 
-    @GetMapping("/register")
+    @GetMapping("/register") //사용자가 /register url을 get 요청을 하면 빈 DTO를 모델이 담아 register.html로 보내줌
     public String registerForm(Model model) {
         model.addAttribute("memberRequest", new MemberRequest()); // 이거 필수
         return "register";
