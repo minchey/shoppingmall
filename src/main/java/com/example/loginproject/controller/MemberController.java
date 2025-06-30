@@ -27,27 +27,27 @@ public class MemberController { //웹 요청을 받는 클래스 선언
         return "register";
     }
 
-    @PostMapping("/register")
+    @PostMapping("/register") //post방식으로 제출된 폼 받기
     public String register(
-            @Valid @ModelAttribute MemberRequest memberRequest,
-            BindingResult bindingResult,
-            Model model
+            @Valid @ModelAttribute MemberRequest memberRequest, //valid로 유효성 검사
+            BindingResult bindingResult, // 에러 담는 그릇
+            Model model //화면에 메시지 보내는 용도
     ) {
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) { //유효성 검사 에러가 있으면 다시 폼으로
             return "register";
         }
 
-        if (!memberRequest.getPassword().equals(memberRequest.getConfirmPassword())) {
+        if (!memberRequest.getPassword().equals(memberRequest.getConfirmPassword())) { //비밀번호가 일치 하지 않을때 에러
             model.addAttribute("error", "비밀번호가 일치하지 않습니다.");
             return "register";
         }
 
-        if (memberService.isUsernameDuplicate(memberRequest.getUsername())) {
+        if (memberService.isUsernameDuplicate(memberRequest.getUsername())) { // 아이디 중복 - 회원가입 제출시 서버에 확인
             model.addAttribute("error", "이미 사용 중인 아이디입니다.");
             return "register";
         }
 
-        memberService.register(
+        memberService.register( //유효성 검사 통과하면 각 객체에 데이터 담기
                 memberRequest.getUsername(),
                 memberRequest.getPassword(),
                 memberRequest.getName(),
@@ -58,13 +58,13 @@ public class MemberController { //웹 요청을 받는 클래스 선언
         );
 
 
-        return "redirect:/login";
+        return "redirect:/login"; //가입완료 후 로그인페이지
     }
-    @GetMapping("/check-username")
+    @GetMapping("/check-username") //아이디 중복확인 - 실시간으로 사용자 편의
     @ResponseBody
     public String checkUsername(@RequestParam String username) {
-        System.out.println("🔥 [중복확인 요청] username = " + username);
-        boolean isDuplicate = memberService.isUsernameDuplicate(username);
+       // System.out.println("🔥 [중복확인 요청] username = " + username);
+        boolean isDuplicate = memberService.isUsernameDuplicate(username); //memberservice에 보내서 중복확인 후 isDuplicate에 ture or false 저장
         return isDuplicate ? "duplicate" : "ok";
     }
 
