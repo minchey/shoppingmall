@@ -101,11 +101,12 @@ public class PostController {
     }
 
     //게시글 수정
-    @GetMapping("/{id}/edit")
-    public String editPostForm(@PathVariable Long id, Model model) {
-        Post post = postRepository.findById(id).orElse(null);
-        model.addAttribute("post", post);
-        return "postEdit";  // templates/postEdit.html
+    @GetMapping("/{id}/edit") //게시글 수정 url
+    public String editPostForm(@PathVariable Long id,//id값 변수로 가져옴
+                               Model model) { //데이터를 넘겨줄 객체
+        Post post = postRepository.findById(id).orElse(null); //해당 게시글 가져오는 코드 없다면 null반환
+        model.addAttribute("post", post);//post라는 이름으로 방금 찾은 게시글을 모델에 추가
+        return "postEdit";  // templates/postEdit.html로 이동
     }
 
     @PostMapping("/{id}/edit")
