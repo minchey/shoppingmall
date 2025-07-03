@@ -1,4 +1,4 @@
-package com.example.loginproject.controller;
+package com.example.loginproject.controller; //패키지 선언
 
 import com.example.loginproject.domain.Post;
 import com.example.loginproject.repository.PostRepository;

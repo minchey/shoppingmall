@@ -19,5 +19,5 @@ public class PostService { //게시글 관련 기능(저장,조회 등)을 담�
         //JPA에서 제공하는 기능 새 게시글은 INSERT, 수정은 UPDATE
     public List<Post> getAllPosts() {
         return postRepository.findAll();
-    }//여러개의 게시글을 저장하는 리스트 
+    }//여러개의 게시글을 저장하는 리스트
 }
