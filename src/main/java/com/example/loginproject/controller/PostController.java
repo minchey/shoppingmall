@@ -109,11 +109,11 @@ public class PostController {
         return "postEdit";  // templates/postEdit.html로 이동
     }
 
-    @PostMapping("/{id}/edit")
-    public String updatePost(@PathVariable Long id,
-                             @RequestParam String title,
-                             @RequestParam String content) {
-        Post post = postRepository.findById(id).orElse(null);
+    @PostMapping("/{id}/edit") //게시글 작성 url
+    public String updatePost(@PathVariable Long id, //기본키 1씩 자동증가
+                             @RequestParam String title, // 제목
+                             @RequestParam String content) { //내용
+        Post post = postRepository.findById(id).orElse(null); //사용자 db에서 찾기 못찾으면 null반환
         if (post != null) {
             post.setTitle(title);
             post.setContent(content);
